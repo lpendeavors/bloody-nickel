@@ -1,0 +1,13 @@
+{
+    "account_balance": 10000,
+    "risk_percent": 0.01,
+    "max_position_pct": 0.20,
+    "max_combined_risk_pct": 0.08,
+    "float_threshold_m": 30,
+    "short_threshold_pct": 20,
+    "volume_spike_ratio": 1.5,
+    "gap_threshold_pct": 3,
+    "price_min": 0.01,
+    "price_max": 5.0,
+    "max_tickers_to_scan": 30
+}
