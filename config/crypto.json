@@ -1,0 +1,19 @@
+{
+    "account_balance": 100,
+    "risk_per_trade_pct": 0.02,
+    "max_daily_drawdown_pct": 0.03,
+    "max_consecutive_losses": 2,
+    "cooldown_minutes": 60,
+    "max_trades_per_day": 3,
+    "no_trade_hours_utc": [2, 3, 4],
+    "max_leverage": 5,
+    "min_confluence_score": 3,
+    "coins": [
+        "SOL", "BTC", "ETH",
+        "DOGE", "XRP", "ARB", "AVAX", "LINK",
+        "SUI", "APT", "OP", "WIF", "PEPE",
+        "FET", "RNDR", "TIA", "INJ", "SEI",
+        "JUP", "ENA", "PENDLE", "ONDO", "STX",
+        "NEAR", "FTM", "AAVE", "UNI", "CRV"
+    ]
+}

@@ -43,13 +43,13 @@ class MarketSignal:
 def detect_funding_extreme(ctx: dict) -> tuple:
     """
     Funding rate extreme = overcrowded side about to get squeezed.
-
+    
     Negative funding → shorts paying longs → short squeeze likely
     Positive funding → longs paying shorts → long squeeze likely
-
+    
     Returns: (signal_type, description) or (None, "")
     """
-    funding = float(ctx.get("funding", 0))
+    funding = float(ctx.get("funding", 0) or 0)
 
     # Funding is per 8 hours. Annualize for context.
     # Extreme: > 0.01% per 8h (≈11% annualized) or < -0.01%
@@ -116,8 +116,8 @@ def detect_oi_divergence(ctx: dict, candles) -> tuple:
     - OI decreasing + price rising = shorts covering (squeeze)
     """
     # We need historical OI to detect divergence - for now use current context
-    oi = float(ctx.get("openInterest", 0))
-    premium = float(ctx.get("premium", 0))
+    oi = float(ctx.get("openInterest", 0) or 0)
+    premium = float(ctx.get("premium", 0) or 0)
 
     signals = []
 
@@ -134,12 +134,9 @@ def detect_oi_divergence(ctx: dict, candles) -> tuple:
 def detect_volume_anomaly(ctx: dict) -> tuple:
     """
     Volume anomaly - daily volume relative to OI.
-
-    High volume/OI ratio = active trading, possible accumulation or distribution.
-    Low volume/OI ratio = quiet, waiting.
     """
-    volume = float(ctx.get("dayNtlVlm", 0))
-    oi = float(ctx.get("openInterest", 0))
+    volume = float(ctx.get("dayNtlVlm", 0) or 0)
+    oi = float(ctx.get("openInterest", 0) or 0)
 
     if oi <= 0:
         return None, ""
@@ -149,7 +146,7 @@ def detect_volume_anomaly(ctx: dict) -> tuple:
     # Volume/OI can be in different units (notional vs units), so use relative threshold
     # Just flag if volume is very high in absolute terms
     if volume > 500_000_000:  # $500M+ daily volume
-        return "alert", f"High volume ${volume/1e6:.0f}M — active trading"
+        return "alert", f"High volume ${volume/1e6:.0f}M - active trading"
 
     return None, ""
 
@@ -190,9 +187,9 @@ def detect_cascade_proximity(ctx: dict, book: dict) -> tuple:
     When OI is high and price moves toward the side with heavy leverage,
     liquidations cascade and accelerate the move.
     """
-    oi = float(ctx.get("openInterest", 0))
-    mark = float(ctx.get("markPx", 0))
-    mid = float(ctx.get("midPx", 0))
+    oi = float(ctx.get("openInterest", 0) or 0)
+    mark = float(ctx.get("markPx", 0) or 0)
+    mid = float(ctx.get("midPx", 0) or 0)
 
     if mark <= 0 or mid <= 0:
         return None, ""
@@ -227,7 +224,7 @@ def scan_market_mechanics(coin: str, ctx: dict, book: dict, candles=None) -> Mar
         directions[sig] += 2  # Funding is strong signal
 
     # 2. Order book walls
-    mid = float(ctx.get("midPx", 0))
+    mid = float(ctx.get("midPx", 0) or 0)
     bid_px, bid_sz, ask_px, ask_sz = detect_book_walls(book, mid)
     if bid_px:
         mechanics.append(f"Bid wall ${bid_px} ({bid_sz:.0f} units)")
@@ -272,8 +269,8 @@ def scan_market_mechanics(coin: str, ctx: dict, book: dict, candles=None) -> Mar
         return None  # Ambiguous - no trade
 
     # Entry / Stop / Targets
-    mark = float(ctx.get("markPx", 0))
-    premium = float(ctx.get("premium", 0))
+    mark = float(ctx.get("markPx", 0) or 0)
+    premium = float(ctx.get("premium", 0) or 0)
 
     if direction == "long":
         entry = round(mark + mark * 0.0005, 4)
@@ -307,8 +304,8 @@ def scan_market_mechanics(coin: str, ctx: dict, book: dict, candles=None) -> Mar
         direction=direction,
         mechanics=mechanics,
         score=len(mechanics),
-        funding_rate=float(ctx.get("funding", 0)),
-        open_interest=float(ctx.get("openInterest", 0)),
+        funding_rate=float(ctx.get("funding", 0) or 0),
+        open_interest=float(ctx.get("openInterest", 0) or 0),
         premium=premium,
         bid_wall=bid_px or 0,
         ask_wall=ask_px or 0,
