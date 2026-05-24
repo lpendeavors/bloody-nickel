@@ -1,0 +1,6 @@
+src/__pycache__/
+tests/__pycache__/
+*.pyc
+.pytest_cache/
+latest_results.json
+trade_records.json
