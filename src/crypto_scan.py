@@ -17,12 +17,8 @@ sys.path.insert(0, os.path.dirname(__file__))
 from hyperliquid_client import get_meta_and_contexts, get_candle_array
 from crypto_scanner import scan_coin, is_kill_switch_active
 
-# Top coins to scan by volume
-TOP_COINS = [
-    "BTC", "ETH", "SOL", "DOGE", "XRP", "ARB", "AVAX", "LINK",
-    "SUI", "APT", "OP", "WIF", "PEPE", "FET", "RNDR", "TIA",
-    "INJ", "SEI", "PYTH", "JUP", "ONDO", "PENDLE", "ENA", "STX",
-]
+# Larry's watchlist — BTC + ETH for context, SOL is the primary trade pair
+TOP_COINS = ["SOL", "BTC", "ETH"]
 
 # Config
 MIN_CONFLUENCE = 3
