@@ -30,8 +30,9 @@ Daily penny stock screener for Larry's trading criteria.
 ## Setup
 
 ```bash
-pip install yfinance
-python src/screener.py
+pip install yfinance requests numpy
+python src/screener.py          # Penny stock scan
+python src/crypto_scan.py       # Hyperliquid crypto scan
 ```
 
 ## Testing
@@ -47,3 +48,18 @@ Edit `config/settings.json` to adjust:
 - Risk percentage
 - Float threshold
 - Short interest threshold
+
+## Hyperliquid Crypto Scanner
+
+Scans top perp pairs for confluence signals (3+ required):
+- RSI(14) oversold/momentum on 4H and 1H
+- Volume spike ≥ 2x the 20-period average
+- VWAP bounce (within 1%)
+- EMA 9/21 crossover on 4H
+- Liquidity sweep (stop hunt reversal)
+- Order block return
+
+Kill switches:
+- No trading 2-5am UTC (low liquidity)
+- 3% daily drawdown → stop
+- 2 consecutive losses → 1hr cooldown
